@@ -1,0 +1,446 @@
+@import "tailwindcss";
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Ledgerline — design tokens (editorial, warm paper & ink)
+   ────────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  /* Canvas + ink */
+  --color-canvas: #f3efe6;
+  --color-canvas-sunken: #e9e3d4;
+  --color-ink: #16140f;
+  --color-ink-muted: #4a463c;
+  --color-line: rgba(22, 20, 15, 0.16);
+  --color-line-strong: #16140f;
+
+  /* Accents */
+  --color-accent: #2a23ff;
+  --color-signal: #ff4d2e;
+  --color-success: #1fae5a;
+
+  /* On-ink (inverted) */
+  --color-on-ink: #f3efe6;
+  --color-on-ink-muted-1: rgba(243, 239, 230, 0.75);
+  --color-on-ink-muted-2: rgba(243, 239, 230, 0.65);
+  --color-on-ink-muted-3: rgba(243, 239, 230, 0.55);
+  --color-on-ink-line: rgba(243, 239, 230, 0.2);
+
+  /* Fonts */
+  --font-display: "Bricolage Grotesque", "Inter", system-ui, sans-serif;
+  --font-serif-accent: "Instrument Serif", "Times New Roman", serif;
+  --font-body: "Hanken Grotesk", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Easings */
+  --ease-signature: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "ss01", "cv11";
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-on-ink);
+}
+
+/* Headings: default to display face, bold. */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* Utility classes that Tailwind 4 can't know about. */
+.font-display {
+  font-family: var(--font-display);
+}
+.font-serif-accent {
+  font-family: var(--font-serif-accent);
+}
+.font-body {
+  font-family: var(--font-body);
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.italic-serif {
+  font-family: var(--font-serif-accent);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Label eyebrow: mono uppercase, tight tracking, often preceded by a rule. */
+.label {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::before {
+  content: "";
+  width: 34px;
+  height: 1.5px;
+  background: currentColor;
+  display: inline-block;
+}
+
+/* Hairline rules — the structural spine of the system. */
+.hairline {
+  border: 0;
+  border-top: 1px solid var(--color-line);
+}
+.hairline-strong {
+  border: 0;
+  border-top: 1px solid var(--color-line-strong);
+}
+
+/* Index numbers like 01, 02… */
+.idx {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 22px;
+  min-height: 46px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1;
+  transition:
+    background-color 250ms var(--ease-signature),
+    color 250ms var(--ease-signature),
+    border-color 250ms var(--ease-signature),
+    transform 250ms var(--ease-signature),
+    box-shadow 300ms var(--ease-signature);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+.btn-primary {
+  background: var(--color-ink);
+  color: var(--color-on-ink);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-accent);
+  transform: translateY(-2px);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--color-ink);
+  border: 1px solid var(--color-ink);
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--color-ink);
+  color: var(--color-on-ink);
+  transform: translateY(-2px);
+}
+.btn-sm {
+  padding: 10px 16px;
+  min-height: 38px;
+  font-size: 11.5px;
+}
+.btn-lg {
+  padding: 20px 32px;
+  min-height: 56px;
+  font-size: 13px;
+}
+.btn-signal {
+  background: var(--color-signal);
+  color: var(--color-ink);
+}
+.btn-signal:hover:not(:disabled) {
+  background: var(--color-accent);
+  color: var(--color-on-ink);
+  transform: translateY(-2px);
+}
+
+/* Inputs */
+.field-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  margin-bottom: 8px;
+}
+.field {
+  width: 100%;
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-family: var(--font-body);
+  font-size: 16px; /* prevents iOS zoom */
+  line-height: 1.4;
+  background: var(--color-canvas);
+  border: 1px solid var(--color-line-strong);
+  color: var(--color-ink);
+  transition:
+    border-color 200ms var(--ease-signature),
+    background-color 200ms var(--ease-signature);
+}
+.field::placeholder {
+  color: rgba(22, 20, 15, 0.45);
+}
+.field:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  background: var(--color-canvas-sunken);
+}
+.field:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+textarea.field {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Cards */
+.card {
+  background: var(--color-canvas);
+  border: 1px solid var(--color-line-strong);
+  border-radius: 14px;
+  padding: 28px;
+  transition:
+    transform 450ms var(--ease-signature),
+    box-shadow 450ms var(--ease-signature),
+    border-color 250ms var(--ease-signature);
+}
+.card-quiet {
+  background: var(--color-canvas);
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+/* Pills and chips */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  line-height: 1;
+  border: 1px solid currentColor;
+  color: var(--color-ink-muted);
+}
+.chip-accent {
+  color: var(--color-accent);
+}
+.chip-signal {
+  color: var(--color-signal);
+}
+.chip-success {
+  color: var(--color-success);
+}
+.chip-ink {
+  color: var(--color-ink);
+}
+
+/* Status pill with pulsing dot. */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-success);
+  animation: pulse 2s var(--ease-signature) infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.85);
+  }
+}
+
+/* Reveal animation for sections. */
+.reveal {
+  opacity: 0;
+  transform: translateY(34px);
+  animation: revealIn 900ms var(--ease-signature) forwards;
+}
+.reveal-1 {
+  animation-delay: 0ms;
+}
+.reveal-2 {
+  animation-delay: 80ms;
+}
+.reveal-3 {
+  animation-delay: 160ms;
+}
+.reveal-4 {
+  animation-delay: 240ms;
+}
+.reveal-5 {
+  animation-delay: 320ms;
+}
+
+@keyframes revealIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-canvas-sunken) 0%,
+    var(--color-canvas) 50%,
+    var(--color-canvas-sunken) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+  border-radius: 3px;
+}
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Table rows */
+.row-hover {
+  transition: background-color 200ms var(--ease-signature);
+}
+.row-hover:hover {
+  background: var(--color-canvas-sunken);
+}
+
+/* Link grow-from-left underline for mono nav links. */
+.nav-link {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 1.5px;
+  background: currentColor;
+  transition: width 300ms var(--ease-signature);
+}
+.nav-link:hover::after,
+.nav-link[aria-current="page"]::after {
+  width: 100%;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Focus visible everywhere. */
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Scrollbar — subtle, warm */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(22, 20, 15, 0.18);
+  border-radius: 999px;
+  border: 2px solid var(--color-canvas);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(22, 20, 15, 0.4);
+}
