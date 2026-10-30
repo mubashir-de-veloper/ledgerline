@@ -25,9 +25,42 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const ownerId = await requireOwner();
-    const body = await req.json();
-    const name = (body.name || "").trim();
-    const email = (body.email || "").trim();
+    let body: unknown;
+
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid JSON request body." },
+        { status: 400 },
+      );
+    }
+
+    if (
+      !body ||
+      typeof body !== "object" ||
+      Array.isArray(body)
+    ) {
+      return NextResponse.json(
+        { error: "Request body must be a JSON object." },
+        { status: 400 },
+      );
+    }
+
+    const input = body as Record<string, unknown>;
+
+        if (
+      typeof input.name !== "string" ||
+      typeof input.email !== "string"
+    ) {
+      return NextResponse.json(
+        { error: "Name and email must be text values." },
+        { status: 400 },
+      );
+    }
+
+    const name = input.name.trim();
+    const email = input.email.trim();
     if (!name || !email) {
       return NextResponse.json(
         { error: "A name and email are required." },
@@ -40,9 +73,12 @@ export async function POST(req: NextRequest) {
         ownerId,
         name,
         email,
-        company: body.company?.trim() || null,
-        address: body.address?.trim() || null,
-        notes: body.notes?.trim() || null,
+        company:
+          typeof input.company === "string" ? input.company.trim() || null : null,
+        address:
+          typeof input.address === "string" ? input.address.trim() || null : null,
+        notes:
+          typeof input.notes === "string" ? input.notes.trim() || null : null,
       })
       .returning();
     return NextResponse.json({ client: created });

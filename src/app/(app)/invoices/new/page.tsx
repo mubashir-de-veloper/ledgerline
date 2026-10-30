@@ -34,11 +34,27 @@ export default function NewInvoicePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [clientsError, setClientsError] = useState<string | null>(null);
+
   useEffect(() => {
-    fetch("/api/clients")
-      .then((r) => r.json())
-      .then((d) => setClients(d.clients || []))
-      .catch(() => {});
+    async function loadClients() {
+      try {
+        const response = await fetch("/api/clients");
+        const data = await response.json().catch(() => ({}));
+  
+        if (!response.ok) {
+          throw new Error("Failed to load clients");
+        }
+  
+        setClients(data.clients || []);
+      } catch {
+        setClientsError(
+          "Couldn't load clients. Check your connection and refresh the page."
+        );
+      }
+    }
+  
+    loadClients();
   }, []);
 
   const subtotal = items.reduce((sum, it) => {
@@ -145,6 +161,9 @@ export default function NewInvoicePage() {
                 required
               />
             </label>
+            {clientsError ? (
+            <Feedback tone="error">{clientsError}</Feedback>
+            ) : null}
           </div>
         </div>
 

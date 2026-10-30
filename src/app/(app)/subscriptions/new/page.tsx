@@ -25,11 +25,27 @@ export default function NewSubscriptionPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [clientsError, setClientsError] = useState<string | null>(null);
+
   useEffect(() => {
-    fetch("/api/clients")
-      .then((r) => r.json())
-      .then((d) => setClients(d.clients || []))
-      .catch(() => {});
+    async function loadClients() {
+      try {
+        const response = await fetch("/api/clients");
+        const data = await response.json().catch(() => ({}));
+  
+        if (!response.ok) {
+          throw new Error("Failed to load clients");
+        }
+  
+        setClients(data.clients || []);
+      } catch {
+        setClientsError(
+          "Couldn't load clients. Check your connection and refresh the page."
+        );
+      }
+    }
+  
+    loadClients();
   }, []);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -89,6 +105,9 @@ export default function NewSubscriptionPage() {
             ))}
           </select>
         </label>
+        {clientsError ? (
+          <Feedback tone="error">{clientsError}</Feedback>
+        ) : null}
 
         <label className="block">
           <span className="field-label">Plan name</span>

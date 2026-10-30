@@ -30,7 +30,7 @@ export async function PATCH(
     const [updated] = await db
       .update(subscriptions)
       .set({ status: nextStatus })
-      .where(eq(subscriptions.id, id))
+      .where(and(eq(subscriptions.id, id), eq(subscriptions.ownerId, ownerId)))
       .returning();
     return NextResponse.json({ subscription: updated });
   } catch (err) {

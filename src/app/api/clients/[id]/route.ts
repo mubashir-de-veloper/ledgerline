@@ -63,7 +63,7 @@ export async function PATCH(
         address: body.address?.trim() || null,
         notes: body.notes?.trim() || null,
       })
-      .where(eq(clients.id, id))
+      .where(and(eq(clients.id, id), eq(clients.ownerId, ownerId)))
       .returning();
     return NextResponse.json({ client: updated });
   } catch (err) {
@@ -104,7 +104,9 @@ export async function DELETE(
         { status: 409 },
       );
     }
-    await db.delete(clients).where(eq(clients.id, id));
+    await db
+    .delete(clients)
+    .where(and(eq(clients.id, id), eq(clients.ownerId, ownerId)));
     return NextResponse.json({ ok: true });
   } catch (err) {
     if (err instanceof Response) return err;

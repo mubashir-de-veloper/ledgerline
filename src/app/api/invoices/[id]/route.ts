@@ -76,7 +76,7 @@ export async function POST(
       const [updated] = await db
         .update(invoices)
         .set({ status: "sent", updatedAt: new Date() })
-        .where(eq(invoices.id, id))
+        .where(and(eq(invoices.id, id), eq(invoices.ownerId, ownerId)))
         .returning();
       return NextResponse.json({ invoice: updated });
     }
@@ -91,7 +91,7 @@ export async function POST(
       const [updated] = await db
         .update(invoices)
         .set({ status: "void", updatedAt: new Date() })
-        .where(eq(invoices.id, id))
+        .where(and(eq(invoices.id, id), eq(invoices.ownerId, ownerId)))
         .returning();
       return NextResponse.json({ invoice: updated });
     }
@@ -144,7 +144,7 @@ export async function POST(
             status: nextStatus,
             updatedAt: new Date(),
           })
-          .where(eq(invoices.id, inv.id))
+          .where(and(eq(invoices.id, inv.id), eq(invoices.ownerId, ownerId)))
           .returning();
         return NextResponse.json({ payment, invoice: updated });
       });
