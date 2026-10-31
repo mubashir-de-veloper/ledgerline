@@ -5,6 +5,7 @@ import {
   invoiceItems,
   clients,
   payments,
+  auditLogs,
 } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { requireOwner } from "@/lib/require-owner";
@@ -138,14 +139,46 @@ export async function POST(
         const newPaid = +(paidSoFar + amount).toFixed(2);
         const nextStatus = newPaid >= total - 0.005 ? "paid" : inv.status;
         const [updated] = await tx
-          .update(invoices)
-          .set({
-            paidAmount: newPaid.toFixed(2),
+        .update(invoices)
+        .set({
+          paidAmount: newPaid.toFixed(2),
+          status: nextStatus,
+          updatedAt: new Date(),
+        })
+        .where(and(eq(invoices.id, inv.id), eq(invoices.ownerId, ownerId)))
+        .returning();
+
+        // Record every payment, including partial payments.
+        await tx.insert(auditLogs).values({
+          ownerId,
+          action: "invoice.payment_recorded",
+          entity: "invoice",
+          entityId: inv.id,
+          metadata: JSON.stringify({
+            amount,
+            method,
+            reference,
+            paidAmount: newPaid,
             status: nextStatus,
-            updatedAt: new Date(),
-          })
-          .where(and(eq(invoices.id, inv.id), eq(invoices.ownerId, ownerId)))
-          .returning();
+          }),
+        });
+
+        // Record the transition to fully paid separately.
+        if (nextStatus === "paid") {
+          await tx.insert(auditLogs).values({
+            ownerId,
+            action: "invoice.paid",
+            entity: "invoice",
+            entityId: inv.id,
+            metadata: JSON.stringify({
+              amount,
+              method,
+              reference,
+              total: inv.total,
+            }),
+          });
+        }
+
         return NextResponse.json({ payment, invoice: updated });
       });
     }
