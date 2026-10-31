@@ -4,6 +4,13 @@
    Ledgerline — design tokens (editorial, warm paper & ink)
    ────────────────────────────────────────────────────────────────────────── */
 
+   .font-variables {
+    --font-display: "Arial", sans-serif;
+    --font-serif-accent: "Georgia", serif;
+    --font-body: "Arial", sans-serif;
+    --font-mono: "Consolas", monospace;
+  }
+
 @theme {
   /* Canvas + ink */
   --color-canvas: #f3efe6;
